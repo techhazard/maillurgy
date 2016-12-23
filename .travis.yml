@@ -41,6 +41,7 @@ after_success:
   # argument mitigates kcov crashes due to malformed debuginfo, at the
   # cost of some speed <https://github.com/huonw/travis-cargo/issues/12>)
   - travis-cargo coveralls --no-sudo --verify
+  - ls -la *
 
 matrix:
   allow_failures:
