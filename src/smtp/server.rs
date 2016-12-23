@@ -51,3 +51,18 @@ fn test_handle_buffer() {
     assert_eq!(true, handle_buffer(b"aoeuoeaao"));
     assert_eq!(false, handle_buffer(b"QUIT\r\n"));
 }
+
+#[test]
+fn test_server() {
+    use std::net::TcpListener;
+    use std::fs::OpenOptions;
+    use std::os::unix::io::FromRawFd;
+    use std::os::unix::io::IntoRawFd;
+
+    // TODO: do all this in RAM instead of on disk
+    let file = OpenOptions::new().write(true).truncate(true).create(true).open("/tmp/maillurgy-test.tmp").expect("failed to create test file");
+
+    // TODO: use safe variant
+    let tcp_stream = unsafe {TcpStream::from_raw_fd(file.into_raw_fd())};
+    server(tcp_stream);
+}
