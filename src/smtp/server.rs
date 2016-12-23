@@ -4,6 +4,7 @@ use std::io::{Read, Write};
 pub fn server(mut stream: TcpStream) {
     let closed_message = b"554 serveroffline";
     let opening_message = b"220 WEBADDR maillurgy";
+    let unrecognised_command_message = b"500 Command not recognized";
     let _ = stream.write(closed_message);
     let _ = stream.flush();
     println!("welcome message printed");
@@ -21,7 +22,9 @@ pub fn server(mut stream: TcpStream) {
             Ok(_) => continue,
         };
 
-        if !cont {
+        if cont {
+            stream.write_all(unrecognised_command_message);
+        } else {
             println!("break");
             break
         }
@@ -40,4 +43,11 @@ fn handle_buffer(buffer: &[u8]) -> bool {
         return false
     }
     true
+}
+
+
+#[test]
+fn test_handle_buffer() {
+    assert_eq!(true, handle_buffer(b"aoeuoeaao"));
+    assert_eq!(false, handle_buffer(b"QUIT\r\n"));
 }
