@@ -30,6 +30,8 @@ after_success:
   - travis-cargo coveralls --no-sudo
   - ls -la *
   - ls -la kcov/*
+  - rm -rf kcov/build/
+  - mkdir kcov/build
   - cd kcov/build && cmake ../kcov-master && make -j
   - ./kcov/build/src/kcov --verify --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo target/kcov target/debug/maillurgy-*
 
