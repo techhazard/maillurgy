@@ -1,4 +1,4 @@
 pub mod parse;
-mod message;
 mod commands;
+mod replies;
 pub mod server;

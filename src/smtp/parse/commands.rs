@@ -13,6 +13,7 @@ named!(pub end_of_transmission<SmtpCommand>, complete!(do_parse!(
 
 named!(pub greeting<SmtpCommand>, do_parse!(
     hello: ehelo >>
+    space >>
     identifier: take_until!("\r\n") >>
     line_end: crlf >>
     (parse_greeting(hello,identifier))
@@ -61,6 +62,7 @@ mod tests {
         run_testcases(&testcases, super::end_of_transmission);
 
     }
+
     #[test]
     fn greeting_test() {
         // input, exp parsed, exp unparsed

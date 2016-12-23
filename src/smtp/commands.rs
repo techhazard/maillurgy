@@ -1,13 +1,9 @@
-use std::fmt;
-use std::fmt::Debug;
-
-use super::message::Message;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum SmtpCommand {
     Hello(Greeting),
     EndOfTransmission,
-    Message(Message),
+    Message(String),
     InvalidCommand,
 }
 

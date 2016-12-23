@@ -1,8 +1,14 @@
+#[cfg(test)]
 use nom::IResult;
+
+#[cfg(test)]
 use std::fmt::Debug;
 
+
+#[cfg(test)]
 pub type Testcase<I: Sized, O: Sized> = (I, IResult<I, O>);
 
+#[cfg(test)]
 pub fn run_testcases<'a, T, Parser>(testcases: &Vec<Testcase<&'a[u8], T>>, test_parser: Parser)
 where T: Eq,
       T: Debug,
