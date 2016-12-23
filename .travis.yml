@@ -25,17 +25,9 @@ before_script:
       pip install 'travis-cargo<0.2' --user &&
       export PATH=$HOME/.local/bin:$PATH
 
-# the main build
-script:
-  - travis-cargo --only 1.0     test  -- --features regexp
-  - travis-cargo --only nightly build -- --features "nightly core regexp"
-  - travis-cargo --only stable  test  -- $FEATURES
-  - travis-cargo --only beta    test  -- $FEATURES
-  - travis-cargo --only nightly test  -- $FEATURES
-  - travis-cargo bench
-  - travis-cargo --only stable doc -- --features "stream regexp regexp_macros" --no-default-features
 
 after_success:
+  - travis-cargo --only stable doc
   - travis-cargo bench
   - travis-cargo coveralls --no-sudo
   - ./kcov/build/src/kcov --verify --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo target/kcov target/debug/maillurgy-*
