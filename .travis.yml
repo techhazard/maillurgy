@@ -15,7 +15,7 @@ rust:
   - beta
   # check it compiles on the latest stable compiler
   - stable
-  - 1.2.0
+  - 1.3.0
 
 # load travis-cargo
 before_script:
