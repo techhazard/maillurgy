@@ -6,6 +6,7 @@ pub enum Reply {
     BadSequence,
     ParameterNotImplemented,
 }
+
 impl Reply {
     fn code(&self) -> &[u8] {
         use self::Reply::*;
@@ -25,11 +26,11 @@ mod test {
     use super::Reply::*;
 
     fn test_replies() {
-        SyntaxError.code();
-        UnrecognisedCommand.code();
-        CommandNotImplemented.code();
-        BadSequence.code();
-        ParameterNotImplemented.code();
+        assert!(SyntaxError.code());
+        assert!(UnrecognisedCommand.code());
+        assert!(CommandNotImplemented.code());
+        assert!(BadSequence.code());
+        assert!(ParameterNotImplemented.code());
     }
 }
 //    x1z  Information: These are replies to requests for information, such
