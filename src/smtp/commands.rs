@@ -1,13 +1,25 @@
+use std::fmt;
+use std::fmt::Debug;
+
 use super::message::Message;
 
+#[derive(Debug, Eq, PartialEq)]
 pub enum SmtpCommand {
-    Greeting(Greeting),
+    Hello(Greeting),
     EndOfTransmission,
     Message(Message),
-
+    InvalidCommand,
 }
 
-pub enum Greeting {
+
+#[derive(Debug, Eq, PartialEq)]
+pub enum GreetingType {
     EHLO,
     HELO
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub struct Greeting {
+    pub hello : GreetingType,
+    pub identifier: String
 }
