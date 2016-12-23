@@ -3,6 +3,12 @@ rust:
   - stable
   - beta
   - nightly
+
+before_script:
+    - ls -la *
 matrix:
   allow_failures:
     - rust: nightly
+
+after_success:
+  - ./kcov/build/src/kcov --verify --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo target/kcov target/debug/maillurgy-*
