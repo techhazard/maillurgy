@@ -1,0 +1,11 @@
+[package]
+name = "maillurgy"
+version = "0.0.0-alpha"
+authors = ["Vince van Oosten <vince@vince.lol>"]
+
+[dependencies]
+
+[dependencies.nom]
+version = "^2.0"
+features = ["regexp", "verbose-errors"]
+
