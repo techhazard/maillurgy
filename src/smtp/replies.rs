@@ -26,11 +26,12 @@ mod test {
     use super::Reply::*;
 
     fn test_replies() {
-        assert!(SyntaxError.code());
-        assert!(UnrecognisedCommand.code());
-        assert!(CommandNotImplemented.code());
-        assert!(BadSequence.code());
-        assert!(ParameterNotImplemented.code());
+        // slice needed due to type comparison
+        assert_eq!(SyntaxError.code(), &b"500 Syntax error, command unrecognized"[..]);
+        assert_eq!(UnrecognisedCommand.code(), &b"501 Syntax error in parameters or arguments"[..]);
+        assert_eq!(CommandNotImplemented.code(), &b"502 Command not implemented"[..]);
+        assert_eq!(BadSequence.code(), &b"503 Bad sequence of commands"[..]);
+        assert_eq!(ParameterNotImplemented.code(), &b"504 Command parameter not implemented"[..]);
     }
 }
 //    x1z  Information: These are replies to requests for information, such
