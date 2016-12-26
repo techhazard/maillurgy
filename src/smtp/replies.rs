@@ -25,6 +25,7 @@ impl Reply {
 mod test {
     use super::Reply::*;
 
+    #[test]
     fn test_replies() {
         // slice needed due to type comparison
         assert_eq!(SyntaxError.code(), &b"500 Syntax error, command unrecognized"[..]);
