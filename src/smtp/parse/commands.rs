@@ -82,4 +82,20 @@ mod tests {
         ];
             run_testcases(&testcases, super::greeting);
     }
+    #[test]
+    fn parse_greeting_test() {
+        // input, exp parsed, exp unparsed
+        let testcases : Vec<(&[u8], &[u8], SmtpCommand)> = vec![
+            (b"EHLO ", b"aardappel", Hello(Greeting{hello: GreetingType::EHLO, identifier: "aardappel".to_string()})),
+            (b"HELO ", b"aardappel", Hello(Greeting{hello: GreetingType::HELO, identifier: "aardappel".to_string()})),
+            (b"HELO", b"aardappel", InvalidCommand),
+        ];
+        for testcase in testcases {
+            let input_hello = testcase.0;
+            let input_identifier = testcase.1;
+            let expected_output = testcase.2;
+            let output = super::parse_greeting(input_hello, input_identifier);
+            assert_eq!(output, expected_output);
+        }
+    }
 }

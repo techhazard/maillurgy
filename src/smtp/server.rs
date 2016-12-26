@@ -60,9 +60,11 @@ fn test_server() {
     use std::os::unix::io::IntoRawFd;
 
     // TODO: do all this in RAM instead of on disk
-    let file = OpenOptions::new().write(true).truncate(true).create(true).open("/tmp/maillurgy-test.tmp").expect("failed to create test file");
+    let mut file = OpenOptions::new().write(true).truncate(true).create(true).open("/tmp/maillurgy-test.tmp").expect("failed to create test file");
+    file.write_all("\0\naoeuaoeu\r\nQUIT\r\n".as_bytes());
 
     // TODO: use safe variant
     let tcp_stream = unsafe {TcpStream::from_raw_fd(file.into_raw_fd())};
+
     server(tcp_stream);
 }
