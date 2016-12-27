@@ -17,6 +17,7 @@ pub fn server(mut stream: & TcpStream) {
 
             Ok(buflen) if buflen > 0 => handle_buffer(&buf[..buflen]),
 
+            // TODO: maybe return an Err(e) here?
             Err(e) => {println!("buf err: {}", e); false},
             // buflen == 0
             Ok(_) => continue,
@@ -48,6 +49,8 @@ fn handle_buffer(buffer: &[u8]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::{handle_buffer, server};
+    use std::net::{TcpStream, TcpListener};
+    use std::io::Write;
 
     #[test]
     fn test_handle_buffer() {
@@ -57,19 +60,26 @@ mod tests {
 
     #[test]
     fn test_server() {
-        use std::os::unix::io::{AsRawFd, FromRawFd};
-        use std::net::{TcpStream, TcpListener};
-        use std::io::{Read, Write};
-
         let listener = TcpListener::bind("127.0.0.2:20244").unwrap();
 
         let stream = TcpStream::connect("127.0.0.2:20244").unwrap();
         println!("{:?}",stream);
         let (mut connection, _) = listener.accept().unwrap();
         println!("{:?}", connection);
-        connection.write_all("QUIT\r\n".as_bytes());
+        let a = connection.write_all("QUIT\r\n".as_bytes());
+        println!("written {:?} bytes to connection", a);
 
         server(&stream);
+    }
+
+    #[test]
+    fn test_server_bad_fd() {
+        use std::os::unix::io::{FromRawFd};
+
+        // TODO: use some sort of safe variant
+        let tcp_stream = unsafe {TcpStream::from_raw_fd(-1)};
+
+        server(&tcp_stream);
     }
 
 }
