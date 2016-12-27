@@ -60,32 +60,42 @@ mod tests {
     #[test]
     fn test_server() {
         use std::thread;
+        use std::net::SocketAddr;
+        use std::str::FromStr;
+        use std::time::Duration;
+        let millis = Duration::from_millis(50);
 
-        let client = TcpListener::bind("127.0.0.2:20244").unwrap();
-
-        let stream = TcpStream::connect("127.0.0.2:20244").unwrap();
-        dbugln!("{:?}",stream);
-        let (mut connection, _) = client.accept().unwrap();
-        dbugln!("{:?}", connection);
+        let testing_socket = SocketAddr::from_str("127.0.0.2:20244").unwrap();
 
         let client_thread = thread::spawn(move || {
-            use std::time::Duration;
 
-            let millis = Duration::from_millis(50);
+            let client = TcpListener::bind(testing_socket).unwrap();
+
+            let (mut connection, _) = client.accept().unwrap();
 
             thread::park_timeout(millis);
             let _ = connection.write("not quit\r\n".as_bytes());
 
-            // we must send quit otherwise the call to
-            // server() below will not terminate
             thread::park_timeout(millis);
             let _ = connection.write("QUIT\r\n".as_bytes());
+
+            let millis = Duration::from_millis(500);
+            thread::yield_now();
+            thread::park_timeout(millis);
+            // server() below will terminate when the "client" terminates the connection
+            // by going out of scope...
         });
+
+        // wait some time until the client exists (50ms)
+        thread::park_timeout(millis);
+
+        let stream = TcpStream::connect(testing_socket).unwrap();
+        dbugln!("{:?}",stream);
 
         server(&stream);
 
+        dbugln!("server quit");
         let res = client_thread.join();
-        dbugln!("join result {:?}", res);
     }
 
     #[test]
