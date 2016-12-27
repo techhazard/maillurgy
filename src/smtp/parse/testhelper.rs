@@ -17,15 +17,15 @@ where T: Eq,
 
     let mut index = 0;
     for test in testcases {
-        println!("\nStarting test {}", index);
+        dbugln!("\nStarting test {}", index);
         let ref input = test.0;
         let ref expected_result = test.1;
 
-        println!("input : {:?}", String::from_utf8_lossy(input));
-        println!("expect: {:?}", &expected_result);
+        dbugln!("input : {:?}", String::from_utf8_lossy(input));
+        dbugln!("expect: {:?}", &expected_result);
 
         let result = test_parser(input);
-        println!("actual: {:?}", result);
+        dbugln!("actual: {:?}", result);
 
         assert_eq!(result, *expected_result);
         index += 1;
