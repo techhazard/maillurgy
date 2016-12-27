@@ -15,12 +15,10 @@ pub fn server(mut stream: & TcpStream) {
 
         let cont = match stream.read(&mut buf) {
 
-            Ok(buflen) if buflen > 0 => handle_buffer(&buf[..buflen]),
+            Ok(buflen) => handle_buffer(&buf[..buflen]),
 
             // TODO: maybe return an Err(e) here?
             Err(e) => {println!("buf err: {}", e); false},
-            // buflen == 0
-            Ok(_) => continue,
         };
 
         if cont {
@@ -56,6 +54,7 @@ mod tests {
     fn test_handle_buffer() {
         assert_eq!(true, handle_buffer(b"aoeuoeaao"));
         assert_eq!(false, handle_buffer(b"QUIT\r\n"));
+        assert_eq!(true, handle_buffer(b""));
     }
 
     #[test]
