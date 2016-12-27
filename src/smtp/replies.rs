@@ -1,4 +1,4 @@
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Eq, PartialEq)]
 pub enum Reply {
     SyntaxError,
     UnrecognisedCommand,
