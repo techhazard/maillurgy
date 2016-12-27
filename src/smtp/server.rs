@@ -7,7 +7,7 @@ pub fn server(mut stream: & TcpStream) {
     let unrecognised_command_message = b"500 Command not recognized";
     let _ = stream.write(closed_message);
     let _ = stream.flush();
-    println!("welcome message printed");
+    dbugln!("welcome message printed");
 
     let mut buf = [0; 2048];
 
@@ -18,27 +18,27 @@ pub fn server(mut stream: & TcpStream) {
             Ok(buflen) => handle_buffer(&buf[..buflen]),
 
             // TODO: maybe return an Err(e) here?
-            Err(e) => {println!("buf err: {}", e); false},
+            Err(e) => {dbugln!("buf err: {}", e); false},
         };
 
         if cont {
             let _ = stream.write_all(unrecognised_command_message);
         } else {
-            println!("break");
+            dbugln!("break");
             break
         }
     }
-    println!("shutdown");
+    dbugln!("shutdown");
     let _ = stream.shutdown(Shutdown::Both);
 }
 
 fn handle_buffer(buffer: &[u8]) -> bool {
 
-    println!("{:?}", &buffer);
+    dbugln!("{:?}", &buffer);
     let a = super::parse::commands::end_of_transmission(buffer);
-    println!("{:?}", a);
+    dbugln!("{:?}", a);
     if a.is_done() {
-        println!("quitting");
+        dbugln!("quitting");
         return false
     }
     true
@@ -64,9 +64,9 @@ mod tests {
         let client = TcpListener::bind("127.0.0.2:20244").unwrap();
 
         let stream = TcpStream::connect("127.0.0.2:20244").unwrap();
-        println!("{:?}",stream);
+        dbugln!("{:?}",stream);
         let (mut connection, _) = client.accept().unwrap();
-        println!("{:?}", connection);
+        dbugln!("{:?}", connection);
 
         let client_thread = thread::spawn(move || {
             use std::time::Duration;
@@ -85,7 +85,7 @@ mod tests {
         server(&stream);
 
         let res = client_thread.join();
-        println!("join result {:?}", res);
+        dbugln!("join result {:?}", res);
     }
 
     #[test]

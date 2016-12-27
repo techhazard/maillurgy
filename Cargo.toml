@@ -9,3 +9,7 @@ authors = ["Vince van Oosten <vince@vince.lol>"]
 version = "^2.0"
 features = ["regexp", "verbose-errors"]
 
+[features]
+default = []
+
+debug = []
