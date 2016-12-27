@@ -59,16 +59,33 @@ mod tests {
 
     #[test]
     fn test_server() {
-        let listener = TcpListener::bind("127.0.0.2:20244").unwrap();
+        use std::thread;
+
+        let client = TcpListener::bind("127.0.0.2:20244").unwrap();
 
         let stream = TcpStream::connect("127.0.0.2:20244").unwrap();
         println!("{:?}",stream);
-        let (mut connection, _) = listener.accept().unwrap();
+        let (mut connection, _) = client.accept().unwrap();
         println!("{:?}", connection);
-        let a = connection.write_all("QUIT\r\n".as_bytes());
-        println!("written {:?} bytes to connection", a);
+
+        let client_thread = thread::spawn(move || {
+            use std::time::Duration;
+
+            let millis = Duration::from_millis(50);
+
+            thread::park_timeout(millis);
+            let _ = connection.write("not quit\r\n".as_bytes());
+
+            // we must send quit otherwise the call to
+            // server() below will not terminate
+            thread::park_timeout(millis);
+            let _ = connection.write("QUIT\r\n".as_bytes());
+        });
 
         server(&stream);
+
+        let res = client_thread.join();
+        println!("join result {:?}", res);
     }
 
     #[test]
