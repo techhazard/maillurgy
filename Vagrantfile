@@ -4,9 +4,23 @@
 
 $install_rust_script = <<SCRIPT
 set -e
+echo "installing rust"
 sudo apt-get install -y curl libssl-dev
 curl https://sh.rustup.rs -sSf > ~/rustup.sh
 sh ~/rustup.sh -y
+echo "rust installed\ninstalling kcov from github"
+echo "installing kcov deps"
+sudo apt-get -yq --no-install-suggests --no-install-recommends --force-yes install libcurl4-openssl-dev libelf-dev libdw-dev binutils-dev cmake pkgconf build-essential
+echo "installing kcov"
+mkdir ~/kcov
+cd ~/kcov
+wget https://github.com/SimonKagstrom/kcov/archive/v32.tar.gz
+tar -xf v32.tar.gz --strip 1
+mkdir build
+cd build
+cmake ..
+make -j
+sudo make install
 sudo systemctl reboot
 SCRIPT
 

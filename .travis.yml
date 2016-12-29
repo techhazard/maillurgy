@@ -15,21 +15,25 @@ rust:
   - beta
   # check it compiles on the latest stable compiler
   - stable
+  # rust minimum supported version
   - 1.13.0
 
 # load travis-cargo
 before_script:
-  - |
-      pip install 'travis-cargo<0.2' --user &&
-      export PATH=$HOME/.local/bin:$PATH
 
 
 after_success:
-  - travis-cargo --only stable doc
-  - travis-cargo bench
-  - travis-cargo coveralls --no-sudo
-  - ./kcov/build/src/kcov --uncommon-options
-  - ./kcov/build/src/kcov --verify --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=/.cargo target/kcov target/debug/maillurgy-*
+  - |
+      cargo install cargo-kcov
+      mkdir ~/kcov  &&
+      cd ~/kcov  &&
+      wget https://github.com/SimonKagstrom/kcov/archive/v32.tar.gz  &&
+      tar -xf v32.tar.gz --strip 1  &&
+      mkdir build  &&
+      cd build  &&
+      cmake ..  &&
+      make -j
+  - cd $TRAVIS_BUILD_DIR;ls -la; PATH="$HOME/kcov/build/src:$PATH" cargo kcov --coveralls
 
 matrix:
   allow_failures:
