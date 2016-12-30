@@ -1,0 +1,22 @@
+#!/bin/sh
+set -e
+
+testcmd="cd ~/smtp  && cargo test --color always"
+coveragecmd="cargo kcov -- --limits=99,100"
+minimum_coverage="99"
+
+
+if [[ "$USER" == "vagrant" ]];
+then
+  ${testcmd}
+  ${coveragecmd}
+  exit 0
+fi
+
+vagrant ssh development -c "${testcmd}"
+vagrant ssh development -c "cd ~/smtp && ${coveragecmd}"
+
+
+git_root="$(git rev-parse --show-toplevel)"
+
+$(which python2) "${git_root}/scripts/check-coverage.py" ${minimum_coverage}
