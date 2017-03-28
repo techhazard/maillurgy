@@ -45,8 +45,10 @@ et origin/master
 ```sh
 # get latest changes
 $ git pull origin master
+# test if everything is working before you add changes
+$ cargo test
 # check out a feature branch
-$  git checout -b 'new-code-that-makes-stuff-happen'
+$ git checkout -b 'new-code-that-makes-stuff-happen'
 # do some hacking in your editor of choice
 $ nvim src/
 ```
@@ -54,11 +56,12 @@ $ nvim src/
 ```sh
 # commit your changes
 $ git add -p
+# commit your changes (this will run the hook)
 $ git commit
 # publish your changes
 $ git push --set-upstream origin your-branchname-here
 ```
-Then make a pull request to awesomefireduck/maillurgy on branch master
+Then please make a pull request to awesomefireduck/maillurgy on branch master
 
 ## Name
 Maillurgy is a forging of the words metallurgy and mail.
